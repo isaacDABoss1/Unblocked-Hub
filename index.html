@@ -1,50 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=0.1">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="icon" type="image/x-icon" href="favicon.png">
-        <title>Will</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <!-- Header -->
-        <header>
-            <div class="section-flex-row">
-                <img class="title-gif" src="/homepage-media/mew.gif" >
-                <marquee behavior="alternate"><h1>World of Will</h1></marquee>
-                <img class="title-gif" src="/homepage-media/mew.gif" >
-            </div>
-        </header>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unblocked Hub | Play Now</title>
+    <style>
+        /* THE DESIGN (CSS) */
+        body {
+            background-color: #0b0b15;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
+        nav {
+            width: 100%;
+            background-color: #161625;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 2px solid #ff00ff;
+            box-shadow: 0 0 15px #ff00ff;
+        }
 
-        <main class="main-flex">
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00f2ff;
+            letter-spacing: 2px;
+        }
 
-            <!-- table of contents -->
-            <div style="width:15%">
-                <div class="box-title">
-                    <h2 class="no-margin box-title-text ">Pages</h2>
-                </div>
-                <div class="box-body">
-                    <a class="no-margin" href="/bowling/bowling.html">bowling</a>
-                    <a>photography</a>
-                </div>
-            </div>
+        /* GAME THEATER */
+        #game-theater {
+            display: none; 
+            width: 95%;
+            max-width: 1000px;
+            margin-top: 20px;
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #00f2ff;
+        }
 
-            <!-- main stuff -->
-            <div style="width:75%">
-                <div class="box-title">
-                    <h2 class="no-margin box-title-text ">About Me</h2>
-                </div>
-                <div class="box-body">
-                    <p class="no-margin">This is all about me </p>
-                    <p>Here's another thing about me</p>
-                </div>
-            </div>
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            background: black;
+            border-radius: 10px;
+        }
 
-        </main>
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
 
+        .close-btn, .full-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
-    </body>
+        .close-btn { background: #ff4757; color: white; }
+        .close-btn:hover { background: #ff2e3d; }
+        
+        .full-btn { background: #00f2ff; color: #000; }
+        .full-btn:hover { background: #00d8e4; }
+
+        /* THE MENU GRID */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            padding: 40px;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .game-card {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px #ff00ff;
+        }
+
+        .game-icon { font-size: 40px; margin-bottom: 10px; }
+
+        .play-btn {
+            background: #00f2ff;
+            color: #000;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px;
+            color: #555;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">UNBLOCKED HUB</div>
+    </nav>
+
+    <div id="game-theater">
+        <div class="btn-container">
+            <button class="close-btn" onclick="closeGame()">← BACK TO MENU</button>
+            <button class="full-btn" onclick="goFullScreen()">⛶ FULLSCREEN</button>
+        </div>
+        <iframe id="game-frame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups" allow="autoplay; fullscreen; gamepad"></iframe>
+    </div>
+
+    <div class="game-grid" id="menu">
+        
+        <div class="game-card" onclick="openGame('retro-bowl/index.html')">
+            <div class="game-icon">🏈</div>
+            <h3>Retro Bowl</h3>
+            <button class="play-btn">PLAY NOW</button>
+        </div>
+
+        <div class="game-card" onclick="openGame('https://kdata1.com/2020/05/slope/')">
+            <div class="game-icon">🥎</div>
+            <h3>Slope</h3>
+            <button class="play-btn">PLAY NOW</button>
+        </div>
+
+        <div class="game-card" onclick="openGame('https://geometry-dash-lite.github.io/')">
+            <div class="game-icon">🟦</div>
+            <h3>Geometry Dash</h3>
+            <button class="play-btn">PLAY NOW</button>
+        </div>
+
+        <div class="game-card" onclick="openGame('https://play2048.co/')">
+            <div class="game-icon">🔢</div>
+            <h3>2048</h3>
+            <button class="play-btn">PLAY NOW</button>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2026 Unblocked Hub | Built by a Year 10 Developer
+    </footer>
+
+    <script>
+        function openGame(url) {
+            document.getElementById('game-frame').src = url;
+            document.getElementById('game-theater').style.display = 'block';
+            document.getElementById('menu').style.display = 'none';
+            window.scrollTo(0,0);
+        }
+
+        function closeGame() {
+            document.getElementById('game-frame').src = '';
+            document.getElementById('game-theater').style.display = 'none';
+            document.getElementById('menu').style.display = 'grid';
+        }
+
+        function goFullScreen() {
+            let iframe = document.getElementById('game-frame');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.webkitRequestFullscreen) { 
+                iframe.webkitRequestFullscreen();
+            }
+        }
+    </script>
+
+</body>
 </html>
