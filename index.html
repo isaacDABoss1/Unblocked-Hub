@@ -32,9 +32,9 @@
             letter-spacing: 2px;
         }
 
-        /* GAME THEATER (Where the game lives) */
+        /* GAME THEATER */
         #game-theater {
-            display: none; /* Hidden by default */
+            display: none; 
             width: 95%;
             max-width: 1000px;
             margin-top: 20px;
@@ -52,19 +52,26 @@
             border-radius: 10px;
         }
 
-        .close-btn {
-            background: #ff4757;
-            color: white;
+        .btn-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .close-btn, .full-btn {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-bottom: 10px;
             font-weight: bold;
             transition: 0.3s;
         }
 
+        .close-btn { background: #ff4757; color: white; }
         .close-btn:hover { background: #ff2e3d; }
+        
+        .full-btn { background: #00f2ff; color: #000; }
+        .full-btn:hover { background: #00d8e4; }
 
         /* THE MENU GRID */
         .game-grid {
@@ -92,10 +99,7 @@
             box-shadow: 0 0 20px #ff00ff;
         }
 
-        .game-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
+        .game-icon { font-size: 40px; margin-bottom: 10px; }
 
         .play-btn {
             background: #00f2ff;
@@ -115,7 +119,7 @@
             color: #555;
             font-size: 14px;
         }
-</style>
+    </style>
 </head>
 <body>
 
@@ -124,31 +128,34 @@
     </nav>
 
     <div id="game-theater">
-        <button class="close-btn" onclick="closeGame()">← BACK TO MENU</button>
-        <iframe id="game-frame" src="" allowfullscreen></iframe>
+        <div class="btn-container">
+            <button class="close-btn" onclick="closeGame()">← BACK TO MENU</button>
+            <button class="full-btn" onclick="goFullScreen()">⛶ FULLSCREEN</button>
+        </div>
+        <iframe id="game-frame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups" allow="autoplay; fullscreen; gamepad"></iframe>
     </div>
 
     <div class="game-grid" id="menu">
         
-        <div class="game-card" onclick="openGame('https://wayou.github.io/slope/')">
+        <div class="game-card" onclick="openGame('slope/index.html')">
             <div class="game-icon">🥎</div>
             <h3>Slope</h3>
             <button class="play-btn">PLAY NOW</button>
         </div>
 
-        <div class="game-card" onclick="openGame('https://geometry-dash-lite.github.io/')">
+        <div class="game-card" onclick="openGame('geometry-dash/index.html')">
             <div class="game-icon">🟦</div>
             <h3>Geometry Dash</h3>
             <button class="play-btn">PLAY NOW</button>
         </div>
 
-        <div class="game-card" onclick="openGame('https://2048-global.github.io/')">
+        <div class="game-card" onclick="openGame('2048/index.html')">
             <div class="game-icon">🔢</div>
             <h3>2048</h3>
             <button class="play-btn">PLAY NOW</button>
         </div>
 
-        <div class="game-card" onclick="openGame('https://game312.github.io/retro-bowl/')">
+        <div class="game-card" onclick="openGame('retro-bowl/index.html')">
             <div class="game-icon">🏈</div>
             <h3>Retro Bowl</h3>
             <button class="play-btn">PLAY NOW</button>
@@ -162,25 +169,31 @@
 
     <script>
         function openGame(url) {
-            // 1. Put the game URL into the iframe
             document.getElementById('game-frame').src = url;
-            // 2. Show the game theater
             document.getElementById('game-theater').style.display = 'block';
-            // 3. Hide the menu so it looks like a clean game page
             document.getElementById('menu').style.display = 'none';
-            // 4. Scroll to top
             window.scrollTo(0,0);
         }
 
         function closeGame() {
-            // 1. Stop the game (clears the iframe)
             document.getElementById('game-frame').src = '';
-            // 2. Hide theater
             document.getElementById('game-theater').style.display = 'none';
-            // 3. Show menu again
             document.getElementById('menu').style.display = 'grid';
+        }
+
+        function goFullScreen() {
+            let iframe = document.getElementById('game-frame');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.webkitRequestFullscreen) { 
+                iframe.webkitRequestFullscreen();
+            }
         }
     </script>
 
 </body>
 </html>
+
+Sandbox Security: I added a sandbox attribute to the iframe to make sure games have the right permissions to run without being blocked by the browser.
+
+Would you like me to help you find the download links for the game files so you can put them into those folders?
