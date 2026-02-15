@@ -32,6 +32,29 @@
             letter-spacing: 2px;
         }
 
+        /* SEARCH BAR STYLE */
+        .search-container {
+            width: 90%;
+            max-width: 500px;
+            margin-top: 30px;
+        }
+
+        #searchBar {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid #00f2ff;
+            background: #161625;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        #searchBar:focus {
+            box-shadow: 0 0 15px #00f2ff;
+        }
+
         /* GAME THEATER */
         #game-theater {
             display: none; 
@@ -127,6 +150,10 @@
         <div class="logo">UNBLOCKED HUB</div>
     </nav>
 
+    <div class="search-container" id="search-area">
+        <input type="text" id="searchBar" onkeyup="searchGames()" placeholder="Search for a game...">
+    </div>
+
     <div id="game-theater">
         <div class="btn-container">
             <button class="close-btn" onclick="closeGame()">← BACK TO MENU</button>
@@ -146,6 +173,30 @@
         <div class="game-card" onclick="openGame('https://kdata1.com/2020/05/slope/')">
             <div class="game-icon">🥎</div>
             <h3>Slope</h3>
+            <button class="play-btn">PLAY NOW</button>
+        </div>
+
+        <div class="game-card" onclick="openGame('https://orteil.dashnet.org/cookieclicker/')">
+            <div class="game-icon">🍪</div>
+            <h3>Cookie Clicker</h3>
+            <button class="play-btn">PLAY NOW</button>
+        </div>
+
+        <div class="game-card" onclick="openGame('https://chvin.github.io/react-tetris/')">
+            <div class="game-icon">🕹️</div>
+            <h3>Tetris</h3>
+            <button class="play-btn">PLAY NOW</button>
+        </div>
+
+        <div class="game-card" onclick="openGame('https://paper-io.com/')">
+            <div class="game-icon">📝</div>
+            <h3>Paper.io 2</h3>
+            <button class="play-btn">PLAY NOW</button>
+        </div>
+
+        <div class="game-card" onclick="openGame('https://flappybird.io/')">
+            <div class="game-icon">🐦</div>
+            <h3>Flappy Bird</h3>
             <button class="play-btn">PLAY NOW</button>
         </div>
 
@@ -172,6 +223,7 @@
             document.getElementById('game-frame').src = url;
             document.getElementById('game-theater').style.display = 'block';
             document.getElementById('menu').style.display = 'none';
+            document.getElementById('search-area').style.display = 'none';
             window.scrollTo(0,0);
         }
 
@@ -179,6 +231,7 @@
             document.getElementById('game-frame').src = '';
             document.getElementById('game-theater').style.display = 'none';
             document.getElementById('menu').style.display = 'grid';
+            document.getElementById('search-area').style.display = 'block';
         }
 
         function goFullScreen() {
@@ -187,6 +240,20 @@
                 iframe.requestFullscreen();
             } else if (iframe.webkitRequestFullscreen) { 
                 iframe.webkitRequestFullscreen();
+            }
+        }
+
+        function searchGames() {
+            let input = document.getElementById('searchBar').value.toLowerCase();
+            let cards = document.getElementsByClassName('game-card');
+
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+                if (title.includes(input)) {
+                    cards[i].style.display = "block";
+                } else {
+                    cards[i].style.display = "none";
+                }
             }
         }
     </script>
