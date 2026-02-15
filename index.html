@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unblocked Hub | Final Elite 2026</title>
+    <title>Unblocked Hub | Master Edition 2026</title>
     <style>
-        body {
+        /* SCROLL FIX: Allow the page to grow naturally */
+        html, body {
+            min-height: 100%;
+            height: auto;
             background-color: #0b0b15;
             color: white;
             font-family: 'Segoe UI', sans-serif;
@@ -13,12 +16,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-y: auto;
         }
 
         nav {
             width: 100%;
             background-color: #161625;
-            padding: 15px;
+            padding: 15px 0;
             text-align: center;
             border-bottom: 3px solid #ff00ff;
             box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
@@ -29,26 +33,11 @@
 
         .logo { font-size: 28px; font-weight: bold; color: #00f2ff; letter-spacing: 3px; }
 
-        /* PANIC BUTTON STYLE */
-        .panic-btn {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            padding: 8px 12px;
-            background: rgba(255,0,0,0.5);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 10px;
-            cursor: pointer;
-            z-index: 9999;
-        }
-
         /* CONTROLS */
         .controls {
             width: 95%;
             max-width: 900px;
-            margin-top: 20px;
+            margin: 20px 0;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -75,184 +64,222 @@
             color: #aaa;
             border-radius: 20px;
             cursor: pointer;
+            transition: 0.3s;
         }
 
         .filter-btn.active { border-color: #ff00ff; color: white; background: rgba(255,0,255,0.2); }
 
-        /* GAME THEATER */
+        /* THE GRID */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            width: 95%;
+            max-width: 1300px;
+            margin-bottom: 50px;
+        }
+
+        .game-card {
+            background: #161625;
+            border: 1px solid #222;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s ease;
+            position: relative;
+        }
+
+        .game-card:hover { transform: translateY(-10px); border-color: #ff00ff; }
+
+        /* FAVORITE HEART */
+        .fav-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #444;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .fav-btn.active { color: #ff00ff; }
+
+        .game-icon { font-size: 45px; display: block; margin-bottom: 12px; }
+        .play-btn { background: #00f2ff; color: #000; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        /* THEATER */
         #game-theater {
             display: none; 
-            width: 95%;
+            width: 98%;
             max-width: 1200px;
-            margin-top: 20px;
+            margin: 20px auto;
             background: #1a1a2e;
             padding: 15px;
             border-radius: 15px;
             border: 2px solid #00f2ff;
         }
 
-        iframe { width: 100%; height: 75vh; border: none; border-radius: 10px; background: #000; }
+        iframe { width: 100%; height: 80vh; border: none; border-radius: 10px; background: #000; }
 
-        /* GRID FIX */
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 20px;
-            padding: 30px;
-            width: 95%;
-            max-width: 1300px;
-        }
-
-        .game-card {
-            background: #161625;
-            border: 1px solid #222;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .game-card:hover { transform: translateY(-5px); border-color: #ff00ff; }
-        .game-icon { font-size: 40px; display: block; margin-bottom: 10px; }
-        .play-btn { background: #00f2ff; color: #000; border: none; padding: 8px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; }
-
-        /* CLICKER */
-        #clicker-game { display: none; background: #161625; border: 2px solid #ff00ff; border-radius: 15px; padding: 20px; text-align: center; margin: 20px; }
-        .ball { width: 100px; height: 100px; background: #ff00ff; border-radius: 50%; margin: 10px auto; cursor: pointer; box-shadow: 0 0 15px #ff00ff; }
-
+        footer { width: 100%; padding: 40px 0; background: #111; color: #444; text-align: center; }
     </style>
 </head>
 <body>
-
-    <button class="panic-btn" onclick="panic()">PANIC (ESC)</button>
 
     <nav><div class="logo">UNBLOCKED HUB</div></nav>
 
     <div class="controls" id="controls-area">
         <div class="search-row">
-            <input type="text" id="searchBar" onkeyup="filterGames()" placeholder="Search all games...">
-            <button class="filter-btn" style="background:#00f2ff; color:black;" onclick="playRandom()">🎲 RANDOM</button>
+            <input type="text" id="searchBar" onkeyup="filterGames()" placeholder="Search 40+ games...">
+            <button class="filter-btn" style="background:#00f2ff; color:black; font-weight:bold;" onclick="playRandom()">🎲 RANDOM</button>
         </div>
         
         <div class="filter-container">
-            <button class="filter-btn active" id="btn-all" onclick="setCategory('all')">All</button>
-            <button class="filter-btn" onclick="setCategory('action')">Action</button>
-            <button class="filter-btn" onclick="setCategory('sports')">Sports</button>
-            <button class="filter-btn" onclick="setCategory('puzzle')">Puzzle</button>
-            <button class="filter-btn" onclick="setCategory('arcade')">Arcade</button>
-            <button class="filter-btn" onclick="setCategory('io')">IO Games</button>
+            <button class="filter-btn active" onclick="setCategory('all', this)">All</button>
+            <button class="filter-btn" onclick="setCategory('action', this)">Action</button>
+            <button class="filter-btn" onclick="setCategory('sports', this)">Sports</button>
+            <button class="filter-btn" onclick="setCategory('puzzle', this)">Puzzle</button>
+            <button class="filter-btn" onclick="setCategory('arcade', this)">Arcade</button>
+            <button class="filter-btn" onclick="setCategory('io', this)">IO Games</button>
         </div>
     </div>
 
-    <div id="clicker-game">
-        <h2>Hub Clicker</h2>
-        <p>Score: <span id="c-score">0</span></p>
-        <div class="ball" onclick="doClick()"></div>
-        <button onclick="closeClicker()" style="margin-top:10px;">Back</button>
-    </div>
-
     <div id="game-theater">
-        <button onclick="closeGame()" style="background:#ff4757; color:white; border:none; padding:10px 20px; border-radius:5px; margin-bottom:10px; cursor:pointer;">← BACK</button>
+        <button onclick="closeGame()" style="background:#ff4757; color:white; border:none; padding:12px 25px; border-radius:8px; margin-bottom:15px; cursor:pointer; font-weight:bold;">← BACK</button>
         <iframe id="game-frame" src=""></iframe>
     </div>
 
     <div class="game-grid" id="menu">
-        <div class="game-card" data-category="arcade" onclick="openClicker()">
-            <span class="game-icon">⚡</span><h3>Hub Clicker</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="action" data-id="1">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://kdata1.com/2020/05/slope/')">
+                <span class="game-icon">🥎</span><h3>Slope</h3><button class="play-btn">PLAY</button>
+            </div>
+        </div>
+        <div class="game-card" data-category="action" data-id="2">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://1v1.lol/')">
+                <span class="game-icon">🔫</span><h3>1v1.LOL</h3><button class="play-btn">PLAY</button>
+            </div>
+        </div>
+        <div class="game-card" data-category="action" data-id="3">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://geometry-dash-lite.github.io/')">
+                <span class="game-icon">🟦</span><h3>Geometry Dash</h3><button class="play-btn">PLAY</button>
+            </div>
+        </div>
+        <div class="game-card" data-category="action" data-id="4">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://vex7.io/')">
+                <span class="game-icon">🏃</span><h3>Vex 7</h3><button class="play-btn">PLAY</button>
+            </div>
+        </div>
+        <div class="game-card" data-category="action" data-id="5">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://subway-surfers.org/')">
+                <span class="game-icon">🏙️</span><h3>Subway Surfers</h3><button class="play-btn">PLAY</button>
+            </div>
         </div>
 
-        <div class="game-card" data-category="action" onclick="openGame('https://kdata1.com/2020/05/slope/')">
-            <span class="game-icon">🥎</span><h3>Slope</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="sports" data-id="6">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('retro-bowl/index.html')">
+                <span class="game-icon">🏈</span><h3>Retro Bowl</h3><button class="play-btn">PLAY</button>
+            </div>
         </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://1v1.lol/')">
-            <span class="game-icon">🔫</span><h3>1v1.LOL</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="sports" data-id="7">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://basketbros.io/')">
+                <span class="game-icon">🏀</span><h3>Basket Bros</h3><button class="play-btn">PLAY</button>
+            </div>
         </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://geometry-dash-lite.github.io/')">
-            <span class="game-icon">🟦</span><h3>Geometry Dash</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://vex7.io/')">
-            <span class="game-icon">🏃</span><h3>Vex 7</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://ovocdn.com/ovo1.4.4/')">
-            <span class="game-icon">⚪</span><h3>OvO</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://subway-surfers.org/')">
-            <span class="game-icon">🏙️</span><h3>Subway Surfers</h3><button class="play-btn">PLAY</button>
-        </div>
-
-        <div class="game-card" data-category="sports" onclick="openGame('retro-bowl/index.html')">
-            <span class="game-icon">🏈</span><h3>Retro Bowl</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="sports" onclick="openGame('https://basketbros.io/')">
-            <span class="game-icon">🏀</span><h3>Basket Bros</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="sports" onclick="openGame('https://soccer-random.github.io/')">
-            <span class="game-icon">⚽</span><h3>Soccer Random</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="sports" onclick="openGame('https://basketballstars.club/')">
-            <span class="game-icon">⛹️</span><h3>B-Ball Stars</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="sports" data-id="8">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://soccer-random.github.io/')">
+                <span class="game-icon">⚽</span><h3>Soccer Random</h3><button class="play-btn">PLAY</button>
+            </div>
         </div>
 
-        <div class="game-card" data-category="io" onclick="openGame('https://shellshock.io/')">
-            <span class="game-icon">🥚</span><h3>Shell Shockers</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="arcade" data-id="9">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://moto-x3m.io/')">
+                <span class="game-icon">🏍️</span><h3>Moto X3M</h3><button class="play-btn">PLAY</button>
+            </div>
         </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://kour.io/')">
-            <span class="game-icon">🎖️</span><h3>Kour.io</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="arcade" data-id="10">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://orteil.dashnet.org/cookieclicker/')">
+                <span class="game-icon">🍪</span><h3>Cookie Clicker</h3><button class="play-btn">PLAY</button>
+            </div>
         </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://deadshot.io/')">
-            <span class="game-icon">🎯</span><h3>Deadshot.io</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://hole-io.com/')">
-            <span class="game-icon">🕳️</span><h3>Hole.io</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://skribbl.io/')">
-            <span class="game-icon">🎨</span><h3>Skribbl.io</h3><button class="play-btn">PLAY</button>
-        </div>
-
-        <div class="game-card" data-category="arcade" onclick="openGame('https://moto-x3m.io/')">
-            <span class="game-icon">🏍️</span><h3>Moto X3M</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="arcade" onclick="openGame('https://orteil.dashnet.org/cookieclicker/')">
-            <span class="game-icon">🍪</span><h3>Cookie Clicker</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="arcade" onclick="openGame('https://eggycar.github.io/')">
-            <span class="game-icon">🍳</span><h3>Eggy Car</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="arcade" onclick="openGame('https://drive-mad.github.io/')">
-            <span class="game-icon">🚚</span><h3>Drive Mad</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="arcade" onclick="openGame('https://papas-freezeria.github.io/')">
-            <span class="game-icon">🍦</span><h3>Papa's Freezeria</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="arcade" data-id="11">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://drive-mad.github.io/')">
+                <span class="game-icon">🚚</span><h3>Drive Mad</h3><button class="play-btn">PLAY</button>
+            </div>
         </div>
 
-        <div class="game-card" data-category="puzzle" onclick="openGame('https://neal.fun/infinite-craft/')">
-            <span class="game-icon">🧪</span><h3>Infinite Craft</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="io" data-id="12">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://shellshock.io/')">
+                <span class="game-icon">🥚</span><h3>Shell Shockers</h3><button class="play-btn">PLAY</button>
+            </div>
         </div>
-        <div class="game-card" data-category="puzzle" onclick="openGame('https://play2048.co/')">
-            <span class="game-icon">🔢</span><h3>2048</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="io" data-id="13">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://kour.io/')">
+                <span class="game-icon">🎖️</span><h3>Kour.io</h3><button class="play-btn">PLAY</button>
+            </div>
         </div>
-        <div class="game-card" data-category="puzzle" onclick="openGame('https://block-blast.github.io/')">
-            <span class="game-icon">🧩</span><h3>Block Blast</h3><button class="play-btn">PLAY</button>
-        </div>
-    </div>
 
-    <footer>&copy; 2026 Unblocked Hub</footer>
+        <div class="game-card" data-category="puzzle" data-id="14">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://neal.fun/infinite-craft/')">
+                <span class="game-icon">🧪</span><h3>Infinite Craft</h3><button class="play-btn">PLAY</button>
+            </div>
+        </div>
+        <div class="game-card" data-category="puzzle" data-id="15">
+            <button class="fav-btn" onclick="toggleFav(event, this)">❤️</button>
+            <div onclick="openGame('https://play2048.co/')">
+                <span class="game-icon">🔢</span><h3>2048</h3><button class="play-btn">PLAY</button>
+            </div>
+        </div>
+
+        <div class="game-card" data-category="action" data-id="16"><button class="fav-btn" onclick="toggleFav(event, this)">❤️</button><div onclick="openGame('https://templerun2.github.io/')"><span class="game-icon">🏃‍♂️</span><h3>Temple Run 2</h3><button class="play-btn">PLAY</button></div></div>
+        <div class="game-card" data-category="io" data-id="17"><button class="fav-btn" onclick="toggleFav(event, this)">❤️</button><div onclick="openGame('https://slither.io/')"><span class="game-icon">🐍</span><h3>Slither.io</h3><button class="play-btn">PLAY</button></div></div>
+        <div class="game-card" data-category="sports" data-id="18"><button class="fav-btn" onclick="toggleFav(event, this)">❤️</button><div onclick="openGame('https://minibars.github.io/')"><span class="game-icon">🏌️</span><h3>Golf Orbit</h3><button class="play-btn">PLAY</button></div></div>
+        <div class="game-card" data-category="puzzle" data-id="19"><button class="fav-btn" onclick="toggleFav(event, this)">❤️</button><div onclick="openGame('https://block-blast.github.io/')"><span class="game-icon">🧩</span><h3>Block Blast</h3><button class="play-btn">PLAY</button></div></div>
+        <div class="game-card" data-category="arcade" data-id="20"><button class="fav-btn" onclick="toggleFav(event, this)">❤️</button><div onclick="openGame('https://papas-freezeria.github.io/')"><span class="game-icon">🍦</span><h3>Papa's Freezeria</h3><button class="play-btn">PLAY</button></div></div>
+        </div>
+
+    <footer>&copy; 2026 Unblocked Hub | Scroll to Explore</footer>
 
     <script>
         let currentCategory = 'all';
-        let clickScore = 0;
 
-        // PANIC BUTTON
-        function panic() { window.location.href = "https://classroom.google.com"; }
-        window.addEventListener('keydown', (e) => { if(e.key === "Escape" || e.key === "p") panic(); });
+        // FAVORITES LOGIC
+        function toggleFav(event, btn) {
+            event.stopPropagation(); // Stops game from opening when clicking heart
+            const card = btn.closest('.game-card');
+            btn.classList.toggle('active');
+            
+            if (btn.classList.contains('active')) {
+                document.getElementById('menu').prepend(card); // Move to top
+            } else {
+                document.getElementById('menu').append(card); // Move to bottom
+            }
+        }
 
-        // NAV
         function openGame(url) {
             document.getElementById('game-frame').src = url;
             document.getElementById('game-theater').style.display = 'block';
             document.getElementById('menu').style.display = 'none';
             document.getElementById('controls-area').style.display = 'none';
+            window.scrollTo(0,0);
         }
 
         function closeGame() {
@@ -262,23 +289,10 @@
             document.getElementById('controls-area').style.display = 'flex';
         }
 
-        function openClicker() {
-            document.getElementById('clicker-game').style.display = 'block';
-            document.getElementById('menu').style.display = 'none';
-        }
-        function closeClicker() {
-            document.getElementById('clicker-game').style.display = 'none';
-            document.getElementById('menu').style.display = 'grid';
-        }
-        function doClick() { 
-            clickScore++; 
-            document.getElementById('c-score').innerText = clickScore; 
-        }
-
-        function setCategory(cat) {
+        function setCategory(cat, btn) {
             currentCategory = cat;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            btn.classList.add('active');
             filterGames();
         }
 
@@ -295,7 +309,10 @@
 
         function playRandom() {
             let visible = Array.from(document.querySelectorAll('.game-card')).filter(c => c.style.display !== 'none');
-            if(visible.length > 0) visible[Math.floor(Math.random()*visible.length)].click();
+            if(visible.length > 0) {
+                const randomCard = visible[Math.floor(Math.random()*visible.length)];
+                randomCard.querySelector('div').click();
+            }
         }
     </script>
 </body>
