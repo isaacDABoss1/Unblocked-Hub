@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unblocked Hub | Play Now</title>
+    <title>Unblocked Hub | 2026 Edition</title>
     <style>
         body {
             background-color: #0b0b15;
@@ -26,7 +26,7 @@
 
         .logo { font-size: 24px; font-weight: bold; color: #00f2ff; letter-spacing: 2px; }
 
-        /* SEARCH & FILTER AREA */
+        /* CONTROLS */
         .controls {
             width: 90%;
             max-width: 800px;
@@ -62,14 +62,33 @@
             color: white;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 14px;
             transition: 0.3s;
         }
 
-        .filter-btn.active, .filter-btn:hover {
-            background: #ff00ff;
-            color: black;
-            font-weight: bold;
+        .filter-btn.active, .filter-btn:hover { background: #ff00ff; color: black; font-weight: bold; }
+
+        /* LEADERBOARD SECTION */
+        .leaderboard-box {
+            background: #161625;
+            border: 1px solid #00f2ff;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .score-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .score-input-group { margin-top: 15px; display: flex; gap: 5px; }
+        .score-input-group input { 
+            background: #0b0b15; border: 1px solid #ff00ff; color: white; padding: 5px; border-radius: 5px; width: 40%;
         }
 
         /* GAME THEATER */
@@ -84,46 +103,31 @@
             border: 2px solid #00f2ff;
         }
 
-        iframe {
-            width: 100%;
-            height: 600px;
-            border: none;
-            background: black;
-            border-radius: 10px;
-        }
-
-        .btn-container { display: flex; gap: 10px; margin-bottom: 10px; }
-        .close-btn { background: #ff4757; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;}
-        .full-btn { background: #00f2ff; color: #000; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;}
+        iframe { width: 100%; height: 600px; border: none; background: black; border-radius: 10px; }
 
         /* THE MENU GRID */
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 20px;
             padding: 40px;
-            width: 90%;
+            width: 95%;
             max-width: 1200px;
         }
 
         .game-card {
             background: #1a1a2e;
             border: 1px solid #333;
-            padding: 20px;
+            padding: 15px;
             border-radius: 15px;
             text-align: center;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        .game-card:hover {
-            transform: translateY(-5px);
-            border-color: #ff00ff;
-            box-shadow: 0 0 15px #ff00ff;
-        }
-
-        .game-icon { font-size: 40px; margin-bottom: 10px; }
-        .play-btn { background: #00f2ff; color: #000; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .game-card:hover { transform: translateY(-5px); border-color: #ff00ff; box-shadow: 0 0 15px #ff00ff; }
+        .game-icon { font-size: 35px; margin-bottom: 10px; }
+        .play-btn { background: #00f2ff; color: #000; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
         footer { margin-top: 50px; padding: 20px; color: #555; font-size: 14px; }
     </style>
@@ -133,7 +137,7 @@
     <nav><div class="logo">UNBLOCKED HUB</div></nav>
 
     <div class="controls" id="controls-area">
-        <input type="text" id="searchBar" onkeyup="filterGames()" placeholder="Search for a game...">
+        <input type="text" id="searchBar" onkeyup="filterGames()" placeholder="Search 25+ games...">
         
         <div class="filter-container">
             <button class="filter-btn active" onclick="setCategory('all')">All</button>
@@ -143,88 +147,101 @@
             <button class="filter-btn" onclick="setCategory('arcade')">Arcade</button>
             <button class="filter-btn" onclick="setCategory('io')">IO Games</button>
         </div>
+
+        <div class="leaderboard-box">
+            <h3>🏆 Hall of Fame</h3>
+            <div id="score-list"></div>
+            <div class="score-input-group">
+                <input type="text" id="userName" placeholder="Name">
+                <input type="number" id="userScore" placeholder="Score">
+                <button onclick="addScore()" style="background:#ff00ff; border:none; border-radius:5px; cursor:pointer;">ADD</button>
+            </div>
+        </div>
     </div>
 
     <div id="game-theater">
-        <div class="btn-container">
-            <button class="close-btn" onclick="closeGame()">← BACK</button>
-            <button class="full-btn" onclick="goFullScreen()">⛶ FULLSCREEN</button>
-        </div>
-        <iframe id="game-frame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups" allow="autoplay; fullscreen; gamepad"></iframe>
+        <button class="close-btn" onclick="closeGame()" style="background:#ff4757; color:white; border:none; padding:10px 20px; border-radius:5px; margin-bottom:10px; cursor:pointer; font-weight:bold;">← BACK</button>
+        <iframe id="game-frame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
 
     <div class="game-grid" id="menu">
+        <div class="game-card" data-category="io" onclick="openGame('https://deadshot.io/')">
+            <div class="game-icon">🎯</div><h3>Deadshot.io</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="arcade" onclick="openGame('https://moto-x3m.io/')">
+            <div class="game-icon">🏍️</div><h3>Moto X3M</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="action" onclick="openGame('https://1v1.lol/')">
+            <div class="game-icon">🔫</div><h3>1v1.LOL</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="sports" onclick="openGame('https://basketballstars.club/')">
+            <div class="game-icon">🏀</div><h3>Basketball Stars</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="arcade" onclick="openGame('https://papas-freezeria.github.io/')">
+            <div class="game-icon">🍦</div><h3>Papa's Freezeria</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="action" onclick="openGame('https://subway-surfers.org/')">
+            <div class="game-icon">🏃</div><h3>Subway Surfers</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="puzzle" onclick="openGame('https://www.google.com/logos/2010/pacman10-i.html')">
+            <div class="game-icon">👾</div><h3>Pacman Classic</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="io" onclick="openGame('https://kour.io/')">
+            <div class="game-icon">🎖️</div><h3>Kour.io</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="action" onclick="openGame('https://rooftopsnipers.com/')">
+            <div class="game-icon">🔭</div><h3>Rooftop Snipers</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="puzzle" onclick="openGame('https://block-blast.github.io/')">
+            <div class="game-icon">🧩</div><h3>Block Blast</h3><button class="play-btn">PLAY</button>
+        </div>
         <div class="game-card" data-category="sports" onclick="openGame('retro-bowl/index.html')">
             <div class="game-icon">🏈</div><h3>Retro Bowl</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="sports" onclick="openGame('https://basketbros.io/')">
-            <div class="game-icon">🏀</div><h3>Basket Bros</h3><button class="play-btn">PLAY</button>
-        </div>
-
         <div class="game-card" data-category="action" onclick="openGame('https://kdata1.com/2020/05/slope/')">
             <div class="game-icon">🥎</div><h3>Slope</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://geometry-dash-lite.github.io/')">
-            <div class="game-icon">🟦</div><h3>Geometry Dash</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://flappybird.io/')">
-            <div class="game-icon">🐦</div><h3>Flappy Bird</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://smashkarts.io/')">
-            <div class="game-icon">🏎️</div><h3>Smash Karts</h3><button class="play-btn">PLAY</button>
-        </div>
-
-        <div class="game-card" data-category="puzzle" onclick="openGame('https://play2048.co/')">
-            <div class="game-icon">🔢</div><h3>2048</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="puzzle" onclick="openGame('https://chvin.github.io/react-tetris/')">
-            <div class="game-icon">🕹️</div><h3>Tetris</h3><button class="play-btn">PLAY</button>
         </div>
         <div class="game-card" data-category="puzzle" onclick="openGame('https://neal.fun/infinite-craft/')">
             <div class="game-icon">🧪</div><h3>Infinite Craft</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="puzzle" onclick="openGame('https://wordle-play.com/')">
-            <div class="game-icon">📝</div><h3>Wordle</h3><button class="play-btn">PLAY</button>
-        </div>
-
-        <div class="game-card" data-category="arcade" onclick="openGame('https://orteil.dashnet.org/cookieclicker/')">
-            <div class="game-icon">🍪</div><h3>Cookie Clicker</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="arcade" onclick="openGame('https://tuckerthedog.github.io/Doodle-Jump/')">
-            <div class="game-icon">🦎</div><h3>Doodle Jump</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="arcade" onclick="openGame('https://pacman.live/play.html')">
-            <div class="game-icon">🍕</div><h3>Pacman</h3><button class="play-btn">PLAY</button>
-        </div>
-
-        <div class="game-card" data-category="io" onclick="openGame('https://paper-io.com/')">
-            <div class="game-icon">📄</div><h3>Paper.io 2</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://hole-io.com/')">
-            <div class="game-icon">🕳️</div><h3>Hole.io</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://slither.io/')">
-            <div class="game-icon">🐍</div><h3>Slither.io</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://krunker.io/')">
-            <div class="game-icon">🔫</div><h3>Krunker</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://skribbl.io/')">
-            <div class="game-icon">🎨</div><h3>Skribbl.io</h3><button class="play-btn">PLAY</button>
-        </div>
     </div>
 
-    <footer>&copy; 2026 Unblocked Hub | Built by a Year 10 Developer</footer>
+    <footer>&copy; 2026 Unblocked Hub</footer>
 
     <script>
         let currentCategory = 'all';
 
+        // LEADERBOARD LOGIC
+        window.onload = function() { displayScores(); };
+
+        function addScore() {
+            let name = document.getElementById('userName').value;
+            let score = parseInt(document.getElementById('userScore').value);
+            if (!name || isNaN(score)) return;
+
+            let scores = JSON.parse(localStorage.getItem('hubScores')) || [];
+            scores.push({name, score});
+            scores.sort((a,b) => b.score - a.score);
+            scores = scores.slice(0, 5); // Keep top 5
+
+            localStorage.setItem('hubScores', JSON.stringify(scores));
+            displayScores();
+            document.getElementById('userName').value = '';
+            document.getElementById('userScore').value = '';
+        }
+
+        function displayScores() {
+            let scores = JSON.parse(localStorage.getItem('hubScores')) || [];
+            let list = document.getElementById('score-list');
+            list.innerHTML = scores.map(s => `<div class="score-entry"><span>${s.name}</span><b>${s.score}</b></div>`).join('');
+        }
+
+        // NAVIGATION LOGIC
         function openGame(url) {
             document.getElementById('game-frame').src = url;
             document.getElementById('game-theater').style.display = 'block';
             document.getElementById('menu').style.display = 'none';
             document.getElementById('controls-area').style.display = 'none';
-            window.scrollTo(0,0);
         }
 
         function closeGame() {
@@ -234,40 +251,21 @@
             document.getElementById('controls-area').style.display = 'flex';
         }
 
-        function goFullScreen() {
-            let iframe = document.getElementById('game-frame');
-            if (iframe.requestFullscreen) iframe.requestFullscreen();
-            else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
-        }
-
         function setCategory(cat) {
             currentCategory = cat;
-            // Update active button visual
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if(btn.innerText.toLowerCase() === cat || (cat === 'all' && btn.innerText === 'All')) {
-                    btn.classList.add('active');
-                }
+                btn.classList.toggle('active', btn.innerText.toLowerCase() === cat || (cat === 'all' && btn.innerText === 'All'));
             });
             filterGames();
         }
 
         function filterGames() {
-            let searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            let term = document.getElementById('searchBar').value.toLowerCase();
             let cards = document.getElementsByClassName('game-card');
-
             for (let card of cards) {
                 let title = card.querySelector('h3').innerText.toLowerCase();
-                let category = card.getAttribute('data-category');
-                
-                let matchesSearch = title.includes(searchTerm);
-                let matchesCategory = (currentCategory === 'all' || category === currentCategory);
-
-                if (matchesSearch && matchesCategory) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
-                }
+                let cat = card.getAttribute('data-category');
+                card.style.display = (title.includes(term) && (currentCategory === 'all' || cat === currentCategory)) ? "block" : "none";
             }
         }
     </script>
