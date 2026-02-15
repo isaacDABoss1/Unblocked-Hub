@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unblocked Hub | 2026 Master Edition</title>
+    <title>Unblocked Hub | Elite Edition 2026</title>
     <style>
         body {
             background-color: #0b0b15;
             color: white;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: hidden;
         }
 
         nav {
@@ -20,94 +21,100 @@
             background-color: #161625;
             padding: 15px;
             text-align: center;
-            border-bottom: 2px solid #ff00ff;
-            box-shadow: 0 0 15px #ff00ff;
+            border-bottom: 3px solid #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .logo { font-size: 24px; font-weight: bold; color: #00f2ff; letter-spacing: 2px; }
+        .logo { font-size: 28px; font-weight: bold; color: #00f2ff; letter-spacing: 3px; text-shadow: 0 0 10px #00f2ff; }
 
-        /* CONTROLS */
+        /* CONTROLS AREA */
         .controls {
             width: 90%;
-            max-width: 800px;
-            margin-top: 30px;
+            max-width: 900px;
+            margin-top: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
         }
 
-        .search-row {
-            display: flex;
-            width: 100%;
-            gap: 10px;
-        }
+        .search-row { display: flex; width: 100%; gap: 10px; }
 
         #searchBar {
             flex-grow: 1;
-            padding: 12px 20px;
-            border-radius: 25px;
+            padding: 14px 20px;
+            border-radius: 30px;
             border: 2px solid #00f2ff;
-            background: #161625;
+            background: #1a1a2e;
             color: white;
             font-size: 16px;
             outline: none;
+            transition: 0.3s;
         }
 
+        #searchBar:focus { box-shadow: 0 0 15px #00f2ff; }
+
         .random-btn {
-            padding: 10px 20px;
-            background: #00f2ff;
-            color: black;
+            padding: 10px 25px;
+            background: linear-gradient(45deg, #00f2ff, #ff00ff);
+            color: white;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        .random-btn:hover { background: #ff00ff; color: white; transform: scale(1.05); }
+        .random-btn:hover { transform: scale(1.05); box-shadow: 0 0 15px #ff00ff; }
 
-        .filter-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
+        .filter-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 
         .filter-btn {
-            padding: 8px 15px;
-            background: #1a1a2e;
-            border: 1px solid #ff00ff;
-            color: white;
+            padding: 8px 18px;
+            background: #161625;
+            border: 1px solid #333;
+            color: #aaa;
             border-radius: 20px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
         }
 
-        .filter-btn.active, .filter-btn:hover { background: #ff00ff; color: black; font-weight: bold; }
+        .filter-btn.active, .filter-btn:hover { border-color: #ff00ff; color: white; background: rgba(255,0,255,0.1); }
 
-        /* LEADERBOARD */
-        .leaderboard-box {
+        /* HUB CLICKER (INTERNAL GAME) */
+        #clicker-game {
+            display: none;
             background: #161625;
-            border: 1px solid #00f2ff;
-            padding: 20px;
+            border: 2px solid #ff00ff;
             border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            margin-top: 10px;
+            padding: 30px;
             text-align: center;
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+            width: 90%;
+            max-width: 500px;
+            margin: 20px;
         }
 
-        .score-entry { display: flex; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid #333; }
-        .score-input-group { margin-top: 15px; display: flex; gap: 5px; justify-content: center; }
-        .score-input-group input { background: #0b0b15; border: 1px solid #ff00ff; color: white; padding: 8px; border-radius: 5px; width: 30%; }
+        .click-ball {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #ff00ff, #700070);
+            border-radius: 50%;
+            margin: 20px auto;
+            cursor: pointer;
+            box-shadow: 0 0 20px #ff00ff;
+            transition: 0.1s;
+        }
+
+        .click-ball:active { transform: scale(0.9); }
 
         /* GAME THEATER */
         #game-theater {
             display: none; 
             width: 95%;
-            max-width: 1100px;
+            max-width: 1200px;
             margin-top: 20px;
             background: #1a1a2e;
             padding: 15px;
@@ -115,33 +122,47 @@
             border: 2px solid #00f2ff;
         }
 
-        iframe { width: 100%; height: 650px; border: none; background: black; border-radius: 10px; }
+        iframe { width: 100%; height: 75vh; border: none; background: black; border-radius: 10px; }
 
         /* MENU GRID */
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 20px;
-            padding: 40px;
+            padding: 30px;
             width: 95%;
-            max-width: 1200px;
+            max-width: 1300px;
         }
 
         .game-card {
-            background: #1a1a2e;
-            border: 1px solid #333;
+            background: #161625;
+            border: 1px solid #222;
             padding: 15px;
-            border-radius: 15px;
+            border-radius: 12px;
             text-align: center;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        .game-card:hover { transform: translateY(-5px); border-color: #ff00ff; box-shadow: 0 0 15px #ff00ff; }
-        .game-icon { font-size: 35px; margin-bottom: 10px; }
-        .play-btn { background: #00f2ff; color: #000; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .game-card:hover { transform: translateY(-8px); border-color: #00f2ff; box-shadow: 0 10px 20px rgba(0,242,255,0.2); }
+        .game-icon { font-size: 40px; margin-bottom: 10px; display: block; }
+        .game-card h3 { font-size: 16px; margin: 5px 0; }
+        .play-btn { background: #00f2ff; color: #000; border: none; padding: 8px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 5px; }
 
-        footer { margin-top: 50px; padding: 20px; color: #555; font-size: 14px; }
+        /* LEADERBOARD */
+        .leaderboard-box {
+            background: #161625;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            margin-top: 15px;
+        }
+
+        .score-entry { display: flex; justify-content: space-between; padding: 5px; border-bottom: 1px solid #222; }
+
+        footer { padding: 30px; color: #444; font-size: 13px; text-align: center; }
     </style>
 </head>
 <body>
@@ -150,7 +171,7 @@
 
     <div class="controls" id="controls-area">
         <div class="search-row">
-            <input type="text" id="searchBar" onkeyup="filterGames()" placeholder="Search 25+ games...">
+            <input type="text" id="searchBar" onkeyup="filterGames()" placeholder="Search 35+ games...">
             <button class="random-btn" onclick="playRandom()">🎲 RANDOM</button>
         </div>
         
@@ -161,102 +182,128 @@
             <button class="filter-btn" onclick="setCategory('puzzle')">Puzzle</button>
             <button class="filter-btn" onclick="setCategory('arcade')">Arcade</button>
             <button class="filter-btn" onclick="setCategory('io')">IO Games</button>
+            <button class="filter-btn" onclick="setCategory('local')">No-Internet</button>
         </div>
 
         <div class="leaderboard-box">
-            <h3>🏆 Hall of Fame</h3>
+            <h3 style="text-align:center; color:#ff00ff; margin-top:0;">🏆 Hall of Fame</h3>
             <div id="score-list"></div>
-            <div class="score-input-group">
-                <input type="text" id="userName" placeholder="User">
-                <input type="number" id="userScore" placeholder="Score">
-                <button onclick="addScore()" style="background:#ff00ff; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">SUBMIT</button>
+            <div style="display:flex; gap:5px; margin-top:10px;">
+                <input type="text" id="userName" placeholder="User" style="width:40%; background:#0b0b15; border:1px solid #333; color:white; padding:5px; border-radius:5px;">
+                <input type="number" id="userScore" placeholder="Score" style="width:40%; background:#0b0b15; border:1px solid #333; color:white; padding:5px; border-radius:5px;">
+                <button onclick="addScore()" style="background:#ff00ff; border:none; border-radius:5px; cursor:pointer; font-weight:bold; flex-grow:1;">+</button>
             </div>
         </div>
     </div>
 
+    <div id="clicker-game">
+        <button onclick="closeClicker()" style="float:left; background:none; border:none; color:#555; cursor:pointer;">✖</button>
+        <h2>Hub Clicker</h2>
+        <p>Score: <span id="click-score">0</span></p>
+        <div class="click-ball" onclick="doClick()"></div>
+        <p style="font-size:12px; color:#555;">(Saves automatically to your leaderboard)</p>
+    </div>
+
     <div id="game-theater">
-        <button onclick="closeGame()" style="background:#ff4757; color:white; border:none; padding:10px 20px; border-radius:5px; margin-bottom:10px; cursor:pointer; font-weight:bold;">← BACK TO MENU</button>
+        <button onclick="closeGame()" style="background:#ff4757; color:white; border:none; padding:10px 20px; border-radius:5px; margin-bottom:10px; cursor:pointer; font-weight:bold;">← BACK TO HUB</button>
         <iframe id="game-frame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
     </div>
 
     <div class="game-grid" id="menu">
+        <div class="game-card" data-category="local" onclick="openClicker()">
+            <span class="game-icon">⚡</span><h3>Hub Clicker</h3><button class="play-btn">PLAY NOW</button>
+        </div>
+
         <div class="game-card" data-category="action" onclick="openGame('https://kdata1.com/2020/05/slope/')">
-            <div class="game-icon">🥎</div><h3>Slope</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://1v1.lol/')">
-            <div class="game-icon">🔫</div><h3>1v1.LOL</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://subway-surfers.org/')">
-            <div class="game-icon">🏃</div><h3>Subway Surfers</h3><button class="play-btn">PLAY</button>
+            <span class="game-icon">🥎</span><h3>Slope</h3><button class="play-btn">PLAY</button>
         </div>
         <div class="game-card" data-category="action" onclick="openGame('https://geometry-dash-lite.github.io/')">
-            <div class="game-icon">🟦</div><h3>Geometry Dash</h3><button class="play-btn">PLAY</button>
+            <span class="game-icon">🟦</span><h3>Geometry Dash</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="action" onclick="openGame('https://rooftopsnipers.com/')">
-            <div class="game-icon">🔭</div><h3>Rooftop Snipers</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="action" onclick="openGame('https://1v1.lol/')">
+            <span class="game-icon">🔫</span><h3>1v1.LOL</h3><button class="play-btn">PLAY</button>
         </div>
-
-        <div class="game-card" data-category="io" onclick="openGame('https://deadshot.io/')">
-            <div class="game-icon">🎯</div><h3>Deadshot.io</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="action" onclick="openGame('https://bitlifeonline.io/')">
+            <span class="game-icon">👶</span><h3>BitLife</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://kour.io/')">
-            <div class="game-icon">🎖️</div><h3>Kour.io</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="action" onclick="openGame('https://vex7.io/')">
+            <span class="game-icon">🏃</span><h3>Vex 7</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://hole-io.com/')">
-            <div class="game-icon">🕳️</div><h3>Hole.io</h3><button class="play-btn">PLAY</button>
-        </div>
-        <div class="game-card" data-category="io" onclick="openGame('https://skribbl.io/')">
-            <div class="game-icon">🎨</div><h3>Skribbl.io</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="action" onclick="openGame('https://ovocdn.com/ovo1.4.4/')">
+            <span class="game-icon">⚪</span><h3>OvO</h3><button class="play-btn">PLAY</button>
         </div>
 
-        <div class="game-card" data-category="sports" onclick="openGame('retro-bowl/index.html')">
-            <div class="game-icon">🏈</div><h3>Retro Bowl</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="io" onclick="openGame('https://shellshock.io/')">
+            <span class="game-icon">🥚</span><h3>Shell Shockers</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="sports" onclick="openGame('https://basketbros.io/')">
-            <div class="game-icon">🏀</div><h3>Basket Bros</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="io" onclick="openGame('https://ev.io/')">
+            <span class="game-icon">🤖</span><h3>EV.IO</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="sports" onclick="openGame('https://basketballstars.club/')">
-            <div class="game-icon">⛹️</div><h3>B-Ball Stars</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="io" onclick="openGame('https://zombsroyale.io/')">
+            <span class="game-icon">🧟</span><h3>ZombsRoyale</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="io" onclick="openGame('https://wings.io/')">
+            <span class="game-icon">✈️</span><h3>Wings.io</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="io" onclick="openGame('https://paper-io.com/')">
+            <span class="game-icon">📄</span><h3>Paper.io 2</h3><button class="play-btn">PLAY</button>
         </div>
 
         <div class="game-card" data-category="arcade" onclick="openGame('https://moto-x3m.io/')">
-            <div class="game-icon">🏍️</div><h3>Moto X3M</h3><button class="play-btn">PLAY</button>
+            <span class="game-icon">🏍️</span><h3>Moto X3M</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="arcade" onclick="openGame('https://drive-mad.github.io/')">
+            <span class="game-icon">🚚</span><h3>Drive Mad</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="arcade" onclick="openGame('https://subway-surfers.org/')">
+            <span class="game-icon">🏙️</span><h3>Subway Surfers</h3><button class="play-btn">PLAY</button>
         </div>
         <div class="game-card" data-category="arcade" onclick="openGame('https://orteil.dashnet.org/cookieclicker/')">
-            <div class="game-icon">🍪</div><h3>Cookie Clicker</h3><button class="play-btn">PLAY</button>
+            <span class="game-icon">🍪</span><h3>Cookie Clicker</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="arcade" onclick="openGame('https://papas-freezeria.github.io/')">
-            <div class="game-icon">🍦</div><h3>Papa's Freezeria</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="arcade" onclick="openGame('https://eggycar.github.io/')">
+            <span class="game-icon">🥚</span><h3>Eggy Car</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="arcade" onclick="openGame('https://tuckerthedog.github.io/Doodle-Jump/')">
-            <div class="game-icon">🦎</div><h3>Doodle Jump</h3><button class="play-btn">PLAY</button>
+
+        <div class="game-card" data-category="sports" onclick="openGame('retro-bowl/index.html')">
+            <span class="game-icon">🏈</span><h3>Retro Bowl</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="sports" onclick="openGame('https://basketballstars.club/')">
+            <span class="game-icon">🏀</span><h3>B-Ball Stars</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="sports" onclick="openGame('https://soccer-random.github.io/')">
+            <span class="game-icon">⚽</span><h3>Soccer Random</h3><button class="play-btn">PLAY</button>
+        </div>
+        <div class="game-card" data-category="sports" onclick="openGame('https://minibars.github.io/')">
+            <span class="game-icon">🏌️</span><h3>Golf Orbit</h3><button class="play-btn">PLAY</button>
         </div>
 
         <div class="game-card" data-category="puzzle" onclick="openGame('https://neal.fun/infinite-craft/')">
-            <div class="game-icon">🧪</div><h3>Infinite Craft</h3><button class="play-btn">PLAY</button>
+            <span class="game-icon">🧪</span><h3>Infinite Craft</h3><button class="play-btn">PLAY</button>
         </div>
         <div class="game-card" data-category="puzzle" onclick="openGame('https://play2048.co/')">
-            <div class="game-icon">🔢</div><h3>2048</h3><button class="play-btn">PLAY</button>
+            <span class="game-icon">🔢</span><h3>2048</h3><button class="play-btn">PLAY</button>
         </div>
         <div class="game-card" data-category="puzzle" onclick="openGame('https://block-blast.github.io/')">
-            <div class="game-icon">🧩</div><h3>Block Blast</h3><button class="play-btn">PLAY</button>
+            <span class="game-icon">🧩</span><h3>Block Blast</h3><button class="play-btn">PLAY</button>
         </div>
-        <div class="game-card" data-category="puzzle" onclick="openGame('https://chvin.github.io/react-tetris/')">
-            <div class="game-icon">🕹️</div><h3>Tetris</h3><button class="play-btn">PLAY</button>
+        <div class="game-card" data-category="puzzle" onclick="openGame('https://chess.org/')">
+            <span class="game-icon">♟️</span><h3>Chess</h3><button class="play-btn">PLAY</button>
         </div>
     </div>
 
-    <footer>&copy; 2026 Unblocked Hub</footer>
+    <footer>Built by a Year 10 Developer | © 2026 Unblocked Hub</footer>
 
     <script>
         let currentCategory = 'all';
+        let clickScore = 0;
 
-        // LEADERBOARD
+        // LEADERBOARD 
         window.onload = function() { displayScores(); };
 
-        function addScore() {
-            let name = document.getElementById('userName').value;
-            let score = parseInt(document.getElementById('userScore').value);
+        function addScore(customName, customScore) {
+            let name = customName || document.getElementById('userName').value;
+            let score = customScore || parseInt(document.getElementById('userScore').value);
             if (!name || isNaN(score)) return;
             let scores = JSON.parse(localStorage.getItem('hubScores')) || [];
             scores.push({name, score});
@@ -272,7 +319,26 @@
             document.getElementById('score-list').innerHTML = scores.map(s => `<div class="score-entry"><span>${s.name}</span><b>${s.score}</b></div>`).join('');
         }
 
-        // NAVIGATION
+        // HUB CLICKER GAME LOGIC
+        function openClicker() {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('controls-area').style.display = 'none';
+            document.getElementById('clicker-game').style.display = 'block';
+        }
+
+        function closeClicker() {
+            addScore('ClickerMaster', clickScore);
+            document.getElementById('clicker-game').style.display = 'none';
+            document.getElementById('menu').style.display = 'grid';
+            document.getElementById('controls-area').style.display = 'flex';
+        }
+
+        function doClick() {
+            clickScore++;
+            document.getElementById('click-score').innerText = clickScore;
+        }
+
+        // NAV LOGIC
         function openGame(url) {
             document.getElementById('game-frame').src = url;
             document.getElementById('game-theater').style.display = 'block';
@@ -297,7 +363,7 @@
         function setCategory(cat) {
             currentCategory = cat;
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText.toLowerCase() === cat || (cat === 'all' && btn.innerText === 'All'));
+                btn.classList.toggle('active', btn.innerText.toLowerCase() === cat || (cat === 'all' && btn.innerText === 'All') || (cat === 'local' && btn.innerText === 'No-Internet'));
             });
             filterGames();
         }
